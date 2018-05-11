@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <title>HCO Django Test</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static "css/base.css" %}" type="text/css">
+    <link rel="stylesheet" href="{% block extrastyle %}{% endblock %}">
+</head>
+
+<body>
+<div id="header">
+    <h2 class="maintitle">HCO Django Test</h2>
+    <h4 class="welcome">Welcome, <a href="#">makingfunk</a>
+        <a href="#">Change Password</a>
+        <a href="#">Logout</a>
+    </h4>
+</div>
+
+<div id="menu">
+    <li><a href="{% url 'main' %}">Main</a></li>
+    <li><a href="{% url 'board:index' %}">Board</a></li>
+
+    <li><a href="{% url 'admin:index' %}">Admin</a></li>
+</div>
+{% block content %}{% endblock %}
+{% block footer %}{% endblock %}
+</body>
+</html>
