@@ -1,0 +1,221 @@
+* {
+  font-family: "PT Sans",Helvetica,Arial,sans-serif !important;
+}
+
+
+html{
+  font-size: 13px;
+}
+
+body{
+  font-size: 1rem;
+}
+
+
+
+.navbar{
+  height: 60px;
+}
+.navbar-header{
+  float: left;
+}
+.navbar-brand{
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 30px;
+
+}
+.logo-wrap{
+  line-height: 60px;
+}
+.logo-wrap > h1{
+  font-size: 1.385rem;
+  display: inline;
+  font-weight: 400;  !important;
+
+}
+.logo{
+  width: 35px;
+  margin-right: 10px;
+}
+.git{
+  width: 25px;
+}
+
+.git_wrap{
+  opacity: 0.3;
+}
+
+.git_wrap:hover{
+  opacity: 1;
+}
+
+.new{
+  float: right;
+  line-height: 60px;
+  margin-right: 15px;
+}
+
+#sort-select{
+  height: 2rem;
+  width: 90px;
+  margin-bottom: 10px;
+  border: none;
+  background-color: salmon;
+  color: #ffffff;
+}
+
+
+.thumbnail .caption{
+  color: #595858;
+
+}
+
+.thumbnail{
+  height: 250px;
+  background: ;
+}
+
+.caption > h2{
+  font-size: 1.1rem;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  font-weight: 600 !important;
+  color: #595858;
+
+}
+h2 > span{
+  font-size: 0.92rem;
+}
+
+
+.caption > p{
+  height: 170px;
+  font-size: 1rem;
+  color: #595858;
+}
+
+.date{
+  font-size: 0.92rem;
+}
+
+.hidden{
+  display: none;
+}
+
+.edit,
+.delete{
+  width: 1rem;
+  display: inline !important;
+  margin-right: 1px !important;
+  margin-left: 1px !important;
+  opacity: 0.3;
+  /*float: right;*/
+}
+
+.edit:hover,
+.delete:hover{
+  opacity: 1;
+}
+
+.container,
+.container-fluid,
+.navbar-default{
+  width: 650px;
+}
+
+.like_button{
+  float: right;
+  width: 35px;
+  text-align: center;
+}
+
+.like_count{
+  line-height: 1.5rem;
+}
+
+.like{
+  cursor: pointer;
+}
+.like > img{
+  width: 15px;
+}
+
+/*post 화면*/
+.post-form{
+  margin-top: 40px;
+  border: 1px solid #ddd;
+  padding: 20px;
+}
+
+.checkbox{
+  line-height: 20px;
+}
+
+.priority{
+  border-color: salmon;
+}
+
+.sign-up-form,
+.sign-in-form{
+  margin-top: 40px;
+  padding: 20px;
+  border: 1px solid rgb(221, 221, 221);
+}
+
+.sub-title{
+  text-align: center;
+  font-size: 1.4rem;
+  color: #595858;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.guide{
+  display: none;
+}
+
+form .btn{
+  width: 75px;
+}
+/*미디어쿼리*/
+
+@media (min-width: 651px) {
+  .container-fluid,
+  .navbar-default{
+    width: 100%;
+  }
+}
+@media (min-width: 768px){
+  .container{
+    width: 900px;
+  }
+  .container-fluid{
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (min-width: 992px){
+  .container{
+    width: 1270px;
+  }
+
+  .container-fluid{
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .guide{
+    display: inline;
+  }
+}
+
+@media (min-width: 1200px){
+  .container{
+  width: 1270px;
+  }
+  .container-fluid{
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}

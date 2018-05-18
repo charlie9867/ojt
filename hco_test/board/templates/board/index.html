@@ -1,0 +1,114 @@
+
+{% extends 'board/base.html' %}
+
+{% block header %}
+{% load static %}
+  {% if user.is_authenticated %}
+  <div class="new">
+    <a href="{% url 'logout' %}">
+      <button type="button" class="btn btn-info navbar-btn">로그아웃</button>
+    </a>
+  </div>
+  <div class="new">
+    <a href="{% url 'new_board' %}">
+      <button type="button" class="btn btn-info navbar-btn">새글</button>
+    </a>
+  </div>
+  {% else %}
+  <div class="new">
+    <a href="{% url 'login' %}">
+      <button type="button" class="btn btn-info navbar-btn">로그인</button>
+    </a>
+  </div>
+  <div class="new">
+    <a href="{% url 'join' %}">
+      <button type="button" class="btn btn-info navbar-btn">회원가입</button>
+    </a>
+  </div>
+  {% endif %}
+
+  <div class="new">
+  {% if user.is_authenticated %}
+      <p class="guide"> <span id="user_name">{{ user.username }}</span> 님 반갑습니다!</p>
+  {% else %}
+      <p class="guide">서비스 사용을 위해서 로그인이 필요합니다.</p>
+  {% endif %}
+  </div>
+{% endblock header %}
+
+{% block container%}
+  <div class="container">
+    <select id="sort-select" onchange="location = this.value;">
+     <option class="sort-date" value="/">최신순</option>
+     <option class="sort-date-end" value="?sort=date_end">오래된순</option>
+     {% if user.is_authenticated %}
+     <option class="sort-mypost" value="?sort=mypost">내가쓴글</option>
+     {% endif %}
+    </select>
+
+    <div class="row">
+      {% for board in boards %}
+      <div class="col-xs-6 col-sm-4 col-md-3" >
+        <div class="thumbnail {% if board.priority == True %} priority {% endif %}">
+          <div class="caption">
+            <h2>
+              {{board.title}}
+              <span>&nbsp;&nbsp;by <span class= "writer_name">{{board.name_id}}</span> {{board.lang}}</span><br><span class="date">{{board.update_date}}</span>
+              <span class="control hidden" id = "control_id{{ forloop.counter0 }}">
+                <a href="{% url 'modify_board' user=board.pk %}"><img src="{% static 'image/edit.png' %}" class= "edit" alt="수정"></a>
+                <a href="{% url 'delete_board' user=board.pk %}" onclick="return confirm('정말 삭제하시겠습니까?')"><img src="{% static 'image/delete.png' %}" class="delete" alt="삭제"></a>
+              </span>
+            </h2>
+            <p onclick="javascript:location.href='{% url "view_board" user=board.pk %}'">
+              {{board.text}}
+              <br/>
+              {{board.trans_text}}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+  <script type="text/javascript">
+  // 인증에 따른 수정, 삭제 버튼 숨김처리
+    for(i = 0; i < $(".writer_name").length; i++){
+      if($("#user_name").text() == $(".writer_name")[i].innerHTML){
+        $("#control_id"+i).removeClass("hidden");
+      }
+    }
+
+// get url query string
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+// 정렬방식 셀렉트 박스 유지
+$(document).ready(function(){
+  var sort = getUrlParameter('sort');
+  if(sort == 'date_end'){
+    $('.sort-date-end').prop('selected', 'selected')
+  }else if(sort == 'mypost'){
+    $('.sort-mypost').prop('selected', 'selected')
+  }else{
+    $('.sort-date').prop('selected', 'selected')
+  }
+});
+
+  </script>
+</body>
+</html>
+
+{% endblock container %}

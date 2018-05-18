@@ -1,0 +1,179 @@
+
+{% extends 'board/base.html' %}
+
+{% block header %}
+{% load staticfiles %}
+  {% if user.is_authenticated %}
+
+  {% else %}
+  <div class="new">
+    <a href="{% url 'login' %}">
+      <button type="button" class="btn btn-info navbar-btn">로그인</button>
+    </a>
+  </div>
+  {% endif %}
+{% endblock header %}
+
+{% block container %}
+  {% if user.is_authenticated %}
+  <script type="text/javascript">
+    alert('잘못된 접근입니다. \n회원가입을 위해서는 로그아웃이 필요합니다.')
+    window.location.href = '/';
+  </script>
+  {% else %}
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-6 col-sm-4 col-md-4 col-xs-offset-3 col-sm-offset-4 col-md-offset-4">
+        <form method="POST" name="joinForm" action="" class="sign-up-form">
+          <input type="hidden" name="checkCaptcha" id="checkCaptcha" value="N" />
+          {%csrf_token%}
+          <h2 class="sub-title"> 회원가입 </h2>
+          {% for field in form %}
+              <div class="form-group">
+                {{ field.label }}
+                {{field}}
+              </div>
+          {% endfor %}
+              <div class="form-group">
+                패스워드 확인
+                <input class="form-control" id="id_password2" maxlength="128" name="password2" type="password" />
+              </div>
+          <img id="captchaImg" src="/static/image/captcha/captcha.jpg" />
+          <br/>
+          <br/>
+          <input type="text" id="captchaVal" name="captchaVal" placeholder="문자를 입력해 주세요." />
+          <input type="button" style="width:120px;" class="btn btn-info" value="이미지 새로고침" onclick="getCaptchaImg()" />
+          <br/>
+          <br/>
+          <button type="submit" onclick="" class="save btn btn-success">회원가입</button>
+          <a href="{% url 'index' %}">
+            <button type="button" class="btn btn-danger">취소</button>
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+  // using jQuery
+      function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+      function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+      }
+
+    function goSubmit(){
+      var f = document.joinForm;
+      if (f.username.value == "") {
+        alert("아이디를 입력해주세요");
+        return f.id_username;
+      }
+      if (f.email.value == "") {
+        alert("이메일을 입력해주세요");
+        return f.email;
+      } else {
+        var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
+        if (f.email.value.match(regExp) == null){
+          alert("이메일 형식을 확인해주세요");
+          return f.email;
+        }
+      }
+
+      if (f.password2.value == "" || f.password2.value == "") {
+        alert("비밀번호를 입력해주세요");
+        return f.password;
+      }
+
+      if (f.password.value != f.password2.value) {
+        alert("비밀번호가 일치하지 않습니다.");
+        return f.password2;
+      }
+
+      if (f.captchaVal.value == "") {
+        alert("자동 가입방지 문자를 입력해 주세요.");
+        return f.captchaVal;
+      } else {
+        checkCaptcha(f.captchaVal.value, f.checkCaptcha.value);
+      }
+    }
+    /**
+    function checkCaptcha(key, val) {
+      $(document).ready(function() {
+        $.ajax({
+          type:"POST",
+          async:false,
+          url:"",
+          data:{'key': key, 'val': val},
+          success: function(data) {
+            //f.submit();
+            alert(1);
+            console.log(data);
+            //$('#captchaImg').attr('src', '/static/image/captcha/'+data.key+'.jpg');
+          },
+          error: function(request, status, error) {
+            alert(request.responseText);
+            console.log(request.responseText);
+          },
+        })
+      });
+    }
+    **/
+    function getCaptchaImg() {
+      $.ajax({
+        type:"POST",
+        async:false,
+        url:"{% url 'getCapchaKey' %}",
+        success: function(data) {
+          console.log(data);
+          var key = data.key;
+          $('#captchaImg').attr('src', "{% static 'image/captcha/'%}"+key+".jpg");
+          //$('#captchaImg').attr('src', "/opt/hco_test/board/static/image/captcha/"+key+".jpg");
+          $('#checkCaptcha').val(key);
+          $('#captchaVal').val('');
+        },
+        error: function(request, status, error) {
+          alert(request.responseText);
+          console.log(request.responseText);
+        },
+      });
+      var csrftoken = getCookie('csrftoken');
+        $.ajaxSetup({
+          beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+              xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+          }
+        });
+    }
+    $(document).ready(function() {
+      getCaptchaImg();
+      var csrftoken = getCookie('csrftoken');
+      $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+{% endblock container %}
